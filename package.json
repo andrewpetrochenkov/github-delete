@@ -1,0 +1,13 @@
+{
+  "name": "github-delete",
+  "version": "2019.5.8",
+  "description": "delete github repo",
+  "keywords": [
+    "github"
+  ],
+  "homepage": "https://github.com/looking-for-a-job/github-delete",
+  "license": "Unlicense",
+  "bin": {
+    "github-delete": "./scripts/github-delete"
+  }
+}

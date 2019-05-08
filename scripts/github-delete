@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+{ set +x; } 2>/dev/null
+
+usage() {
+    cat <<EOF 1>&2
+usage: $(basename $0) name ...
+EOF
+    [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; exit
+}
+
+[[ $1 == "-h" ]] || [[ $1 == "--help" ]] && usage "$@"
+
+[[ $# == 0 ]] && usage
+
+[[ -z "$GITHUB_TOKEN" ]] && echo "ERROR: GITHUB_TOKEN environment variable required" 1>&2 && exit
+
+# https://developer.github.com/v3/repos/#delete-a-repository
+
+while [[ $# != 0 ]]; do
+    url="https://api.github.com/repos/$1"
+    tmp_output="$(mktemp)" || exit
+    http_code="$(curl -s -w '%{http_code}' -s -u "$GITHUB_TOKEN:x-oauth-basic" -o "$tmp_output" -X DELETE "$url" 1> /dev/null)" || exit
+    [[ $http_code -ge 300 ]] && { cat "$tmp_output" ; exit 1; }
+    shift
+done;:
